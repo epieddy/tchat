@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="tchat">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Kernel 42 IRC</title>
+
+    <!-- CSS : Bootstrap -->
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="bootstrap/css/bootstrap-theme.min.css">
+
+    <!-- CSS : App -->
+    <link rel="stylesheet" href="css/app.css">
+
+    <!-- JS : External libraries -->
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.0/angular.js"></script>
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.0/angular-sanitize.js"></script>
+
+    <!-- JS : Socket IO client -->
+    <script type="text/javascript" src="http://nodejs.tchat.k42dev.cloud.kernel42.com:8983/socket.io/socket.io.js"></script>
+
+    <!-- JS : Engine -->
+    <script type="text/javascript" src="js/app.js"></script>
+    <script type="text/javascript" src="js/controllers.js"></script>
+    <script type="text/javascript" src="js/services.js"></script>
+    <script type="text/javascript" src="js/config.js"></script>
+
+  </head>
+
+  <body style="overflow-x: hidden;">
+    <div class="container-fluid">
+      <div class="col-xs-12 col-sm-4 col-md-2">
+
+        <!-- LoginSelector -->
+        <fieldset ng-controller="LoginSelector">
+          <legend>Login</legend>
+          <form ng-submit="update()">
+            <input class="form-control" type="text" ng-model="login" />
+          </form>
+        </fieldset>
+        <!-- LoginSelector -->
+
+        <!-- ClientList -->
+        <fieldset ng-controller="ClientList">
+          <legend>Clients</legend>
+          <ul>
+            <li ng-repeat="(id, data) in clientList">{{data.login}} <span class="glyphicon glyphicon-pencil" ng-if="checkType(data.status, CONST.USER_STATUS.WRITING)"></span></li>
+          </ul>
+        </fieldset>
+        <!-- ClientList -->
+
+        <!-- NotifMode -->
+        <fieldset ng-controller="NotifMode">
+          <legend>Notifications</legend>
+
+          <p>Sounds from :</p>
+          <div class="checkbox">
+            <label><input type="checkbox" ng-change="updateSound()" ng-model="soundSystem" ng-true-value="1" ng-false-value="0"> System</label>
+          </div>
+          <div class="checkbox">
+            <label><input type="checkbox" ng-change="updateSound()" ng-model="soundPM" ng-true-value="8" ng-false-value="0"> PM</label>
+          </div>
+          <div class="checkbox">
+            <label><input type="checkbox" ng-change="updateSound()" ng-model="soundAll" ng-true-value="4" ng-false-value="0"> Everyone</label>
+          </div>
+
+          <p>Alertes from :</p>
+          <div class="checkbox">
+            <label><input type="checkbox" ng-change="updateNotif()" ng-model="notifSystem" ng-true-value="1" ng-false-value="0"> System</label>
+          </div>
+          <div class="checkbox">
+            <label><input type="checkbox" ng-change="updateNotif()" ng-model="notifPM" ng-true-value="8" ng-false-value="0"> PM</label>
+          </div>
+          <div class="checkbox">
+            <label><input type="checkbox" ng-change="updateNotif()" ng-model="notifAll" ng-true-value="4" ng-false-value="0"> Everyone</label>
+          </div>
+
+          <div id="sound"></div>
+
+        </fieldset>
+        <!-- NotifMode -->
+
+      </div>
+
+      <div class="col-xs-12 col-sm-8 col-md-10">
+
+        <!-- MessageHistory -->
+        <fieldset ng-controller="MessageHistory">
+          <legend>Tchat</legend>
+
+          <div id="message-wrapper">
+            <div id="message-list">
+              <div class="row" ng-repeat="message in messages" ng-class="{
+
+                system: checkType(message.type, CONST.MSG_TYPE.SYSTEM),
+                client: checkType(message.type, CONST.MSG_TYPE.CLIENT),
+                all: checkType(message.type, CONST.MSG_TYPE.ALL),
+                pm: checkType(message.type, CONST.MSG_TYPE.PM),
+                yourself: checkType(message.type, CONST.MSG_TYPE.YOURSELF)
+              }">
+                <div class="col-xs-3 text-right">
+                  {{message.from}}<span ng-if="checkType(message.type, CONST.MSG_TYPE.PM)"> to {{message.to}}</span> :
+                </div>
+                <div class="col-xs-9" ng-bind-html="message.message | nl2br | html">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div class="form-group">
+              <label>To :</label>
+              <select class="form-control" ng-model="dest" ng-options="client.id as client.login for client in clientList"></select>
+            </div>
+            <div>
+              <textarea id="message-input" class="form-control" rows="6" class="form-control" type="text" ng-model="message" ng-change="writing()" ng-keyup="send($event)"></textarea>
+              <p>Hint : ctrl + enter</p>
+              <button class="btn btn-default glyphicon glyphicon-trash" ng-click="clear()"></button>
+            </div>
+          </div>
+        </fieldset>
+        <!-- MessageHistory -->
+
+      </div>
+    </div>
+  </body>
+</html>

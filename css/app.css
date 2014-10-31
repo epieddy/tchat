@@ -1,0 +1,20 @@
+/**
+ * TODO.
+ */
+
+#message-wrapper {
+
+height: 400px;
+overflow-y: auto;
+overflow-x: hidden;
+}
+
+#message-wrapper .pm {
+
+color: red;
+}
+
+#message-wrapper .system {
+
+font-weight: bold;
+}
