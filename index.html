@@ -101,7 +101,7 @@
                 yourself: checkType(message.type, CONST.MSG_TYPE.YOURSELF)
               }">
                 <div class="col-xs-3 text-right">
-                  {{message.from}}<span ng-if="checkType(message.type, CONST.MSG_TYPE.PM)"> to {{message.to}}</span> :
+                  {{message.date | date:'HH:mm'}} {{message.from}}<span ng-if="checkType(message.type, CONST.MSG_TYPE.PM)"> to {{message.to}}</span> :
                 </div>
                 <div class="col-xs-9" ng-bind-html="message.message | nl2br | html">
                 </div>

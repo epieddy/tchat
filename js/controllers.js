@@ -114,6 +114,8 @@ tchat.controller('MessageHistory', ['$scope', '$timeout', 'SocketIO', 'Clients',
 
   SocketIO.on('message', function(message) {
 
+    message.date = new Date();
+
     $scope.messages.push(message);
 
     $timeout(function() {
