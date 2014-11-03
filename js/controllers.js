@@ -2,9 +2,9 @@
  * TODO.
  */
 
-tchat.controller('LoginSelector', ['$scope', '$timeout', 'SocketIO', function($scope, $timeout, SocketIO) {
+tchat.controller('LoginSelector', ['$scope', '$timeout', 'SocketIO', 'Storage', function($scope, $timeout, SocketIO, Storage) {
 
-  $scope.login = 'Anonymous';
+  $scope.login = Storage.get('login', 'Anonymous');
 
   $scope.update = function() {
 
@@ -14,7 +14,13 @@ tchat.controller('LoginSelector', ['$scope', '$timeout', 'SocketIO', function($s
     if ($scope.login.trim() == '') {
       $scope.login = 'Anonymous';
     }
+
+    Storage.set('login', $scope.login);
   };
+
+  if ($scope.login != 'Anonymous') {
+    $scope.update();
+  }
 
 }]);
 
@@ -41,26 +47,34 @@ tchat.controller('ClientList', ['$scope', '$timeout', 'Clients', 'CONST', functi
   };
 }]);
 
-tchat.controller('NotifMode', ['$scope', 'Notifs', 'CONST', function($scope, Notifs, CONST) {
+tchat.controller('NotifMode', ['$scope', 'Notifs', 'CONST', 'Storage', function($scope, Notifs, CONST, Storage) {
 
   $scope.CONST = CONST;
 
-  $scope.soundSystem = 1;
-  $scope.soundPM = 8;
-  $scope.soundAll = 4;
+  $scope.soundSystem = parseInt(Storage.get('soundSystem', 1));
+  $scope.soundPM = parseInt(Storage.get('soundPM', 8));
+  $scope.soundAll = parseInt(Storage.get('soundAll', 4));
 
-  $scope.notifSystem = 1;
-  $scope.notifPM = 8;
-  $scope.notifAll = 4;
+  $scope.notifSystem = parseInt(Storage.get('notifSystem', 1));
+  $scope.notifPM = parseInt(Storage.get('notifPM', 8));
+  $scope.notifAll = parseInt(Storage.get('notifAll', 4));
 
   $scope.updateSound = function() {
 
     Notifs.setSoundMode($scope.soundSystem | $scope.soundPM | $scope.soundAll);
+
+    Storage.set('soundSystem', $scope.soundSystem);
+    Storage.set('soundPM', $scope.soundPM);
+    Storage.set('soundAll', $scope.soundAll);
   };
 
   $scope.updateNotif = function() {
 
     Notifs.setNotifMode($scope.notifSystem | $scope.notifPM | $scope.notifAll);
+
+    Storage.set('notifSystem', $scope.notifSystem);
+    Storage.set('notifPM', $scope.notifPM);
+    Storage.set('notifAll', $scope.notifAll);
   };
 
   $scope.updateSound();

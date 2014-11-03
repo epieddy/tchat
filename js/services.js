@@ -155,3 +155,27 @@ tchat.factory('Notifs', ['CONST', function(CONST) {
   };
 
 }]);
+
+tchat.factory('Storage', function() {
+
+
+  return {
+
+    set: function(key, value) {
+
+      localStorage.setItem(key, value);
+    },
+
+    get: function(key, default_value) {
+
+      var value = localStorage.getItem(key);
+
+      if (value === null) {
+        value = default_value;
+      }
+
+      return value;
+    }
+  };
+
+});
