@@ -124,7 +124,7 @@ io.sockets.on('connection', function (socket) {
       }
 
       // Easter eggs.
-      message.message = message.message.replace('42', '<img src="/img/42.jpg" class="img-responsive" />');
+      //message.message = message.message.replace('42', '<img src="/img/42.jpg" class="img-responsive" />');
 
       // Broadcast message.
       if (message.all) {
