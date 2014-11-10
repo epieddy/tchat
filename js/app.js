@@ -98,3 +98,25 @@ tchat.filter('autolink', function() {
     }
   };
 });
+
+(function() {
+
+  var k = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65];
+  var n = 0;
+
+  $(document).keydown(function (e) {
+
+      if (e.keyCode === k[n++]) {
+          if (n === k.length) {
+
+              $('#pony').show('slow');
+              n = 0;
+          }
+      }
+      else {
+
+        n = 0;
+      }
+  });
+
+})();
